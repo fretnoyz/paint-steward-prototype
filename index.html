@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paint Steward Prototype</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0C0E11; --surface: #16191E; --line: #262A31; --ink: #ECEDEF; --muted: #9AA1AB; --accent: #FF9A4D; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Space Grotesk', system-ui, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 16px 64px; }
+  .eyebrow { font-size: 14px; font-weight: 600; color: var(--muted); }
+  h1 { font-size: 36px; letter-spacing: -0.02em; margin: 6px 0 12px; }
+  p { font-size: 17px; line-height: 1.5; color: #C4C9D0; margin: 0 0 12px; }
+  .start { display: inline-flex; align-items: center; height: 52px; padding: 0 24px; border-radius: 26px; background: var(--accent); color: var(--bg); font-weight: 700; text-decoration: none; margin: 12px 0 36px; }
+  h2 { font-size: 20px; margin: 32px 0 12px; }
+  ol { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+  li a { display: flex; justify-content: space-between; gap: 16px; padding: 16px 4px; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+  li a:hover { background: var(--surface); }
+  li span { color: var(--muted); font-size: 15px; text-align: right; }
+  .note { font-size: 14px; color: var(--muted); margin-top: 36px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Texas Quantitative · Steward</div>
+  <h1>Paint Steward prototype</h1>
+  <p>A clickable mock-up of the phone app. It does two jobs: <b>add a paint</b> (scan the can, answer three questions) and <b>look one up</b> (tap a room, see the paint, show it at the store).</p>
+  <p>Nothing here is real yet. The data is made up, the camera is pretend, and nothing is saved. Best on a phone, or in a narrow desktop window.</p>
+  <a class="start" href="home.html">Start at Home</a>
+
+  <h2>Add paint</h2>
+  <ol>
+    <li><a href="scan.html">Scan the can <span>Tap the shutter twice: label, then tint sticker</span></a></li>
+    <li><a href="ask.html">Three questions, then review <span>Tap a review row to change it</span></a></li>
+    <li><a href="known.html">Scanned a can you already have</a></li>
+  </ol>
+
+  <h2>Look up paint</h2>
+  <ol>
+    <li><a href="home.html">Home: your house</a></li>
+    <li><a href="room.html">A room: Master bedroom</a></li>
+    <li><a href="paint.html">A paint card <span>Try "Show at the paint store"</span></a></li>
+  </ol>
+
+  <h2>Other</h2>
+  <ol>
+    <li><a href="first-run.html">First launch (no paint yet)</a></li>
+  </ol>
+
+  <p class="note">Prototype, November 2026. Questions or ideas: tell Dowell.</p>
+</main>
+</body>
+</html>

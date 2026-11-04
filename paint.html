@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paint Steward – Evergreen Fog</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="fit.js"></script>
+</head>
+<body>
+<a class="proto-home" href="index.html">← All screens</a>
+<div class="phone" id="phone">
+
+  <div id="normal">
+    <div style="position: absolute; top: 16px; left: 8px; height: 44px; display: flex; align-items: center">
+      <a href="room.html" aria-label="Back to Master bedroom" style="height: 44px; padding-right: 8px; display: flex; align-items: center; gap: 2px; color: #C4C9D0; text-decoration: none; font-size: 15px">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+        Master bedroom
+      </a>
+    </div>
+
+    <div style="position: absolute; top: 68px; left: 16px; right: 16px; height: 170px; border-radius: 24px; background: #95978A; color: #1E1D1A; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end">
+      <div style="font-size: 14px; font-weight: 600">Walls</div>
+      <div style="font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.05">Evergreen Fog</div>
+    </div>
+
+    <div id="rows" style="position: absolute; top: 254px; left: 20px; right: 20px; display: flex; flex-direction: column"></div>
+
+    <div style="position: absolute; bottom: 100px; left: 16px; right: 16px; display: flex; gap: 10px">
+      <button style="flex: 1; height: 48px; border-radius: 24px; border: 1px solid #3A4048; background: transparent; color: #ECEDEF; font: 600 15px 'Space Grotesk', sans-serif">Share</button>
+      <button style="flex: 1; height: 48px; border-radius: 24px; border: 1px solid #3A4048; background: transparent; color: #ECEDEF; font: 600 15px 'Space Grotesk', sans-serif">Edit</button>
+    </div>
+    <button onclick="store(true)" style="position: absolute; bottom: 32px; left: 16px; right: 16px; height: 56px; border-radius: 28px; border: 0; background: #FF9A4D; color: #0C0E11; font: 700 17px 'Space Grotesk', sans-serif">Show at the paint store</button>
+  </div>
+
+  <div id="store" hidden>
+    <div style="position: absolute; inset: 0; padding: 48px 28px 32px; box-sizing: border-box; color: #111111; display: flex; flex-direction: column; gap: 18px">
+      <div style="height: 120px; border-radius: 18px; background: #95978A"></div>
+      <div style="font-size: 15px; font-weight: 700; letter-spacing: 0.14em">SHERWIN-WILLIAMS</div>
+      <div>
+        <div style="font-size: 26px; font-weight: 600">SW 9130</div>
+        <div style="font-size: 46px; font-weight: 700; letter-spacing: -0.02em; line-height: 1">Evergreen Fog</div>
+      </div>
+      <div style="font-size: 24px; font-weight: 500; line-height: 1.3">Emerald Interior<br>Matte · Extra White base</div>
+      <div style="font: 600 17px/1.6 'JetBrains Mono', monospace; white-space: pre; padding: 14px 16px; border-radius: 12px; background: #F1F1EE">B1-Black      2 24  1
+L1-Raw Umber  - 30  1
+W1-White      - 10  -</div>
+      <div style="font-size: 16px; color: #444444">1 gallon</div>
+      <button onclick="store(false)" style="margin-top: auto; height: 56px; border-radius: 28px; border: 0; background: #111111; color: #FFFFFF; font: 700 17px 'Space Grotesk', sans-serif">Done</button>
+    </div>
+  </div>
+</div>
+<script>
+const sans = "'Space Grotesk', sans-serif", mono = "'JetBrains Mono', monospace";
+document.getElementById('rows').innerHTML = [
+  ['Brand', 'Sherwin-Williams', sans],
+  ['Color', 'SW 9130 Evergreen Fog', sans],
+  ['Paint', 'Emerald Interior · Matte', sans],
+  ['Base', 'Extra White', sans],
+  ['Formula', 'B1-2Y24 L1-30Y1 …', mono],
+  ['Painted', 'Feb 10, 2024 · Me', sans],
+  ['Leftover', 'About half · Garage shelf 2', sans]
+].map(([label, value, font]) => `
+  <div style="min-height: 44px; padding: 6px 0; box-sizing: border-box; border-bottom: 1px solid #1F2329; display: flex; justify-content: space-between; align-items: center; gap: 16px">
+    <span style="font-size: 14px; color: #9AA1AB">${label}</span>
+    <span style="font-size: 15px; font-weight: 500; text-align: right; font-family: ${font}">${value}</span>
+  </div>`).join('');
+function store(on) {
+  document.getElementById('normal').hidden = on;
+  document.getElementById('store').hidden = !on;
+  document.getElementById('phone').style.background = on ? '#FFFFFF' : '#0C0E11';
+}
+</script>
+</body>
+</html>

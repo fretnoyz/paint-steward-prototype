@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paint Steward – Three questions</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="fit.js"></script>
+</head>
+<body>
+<a class="proto-home" href="index.html">← All screens</a>
+<div class="phone" id="phone"></div>
+<script>
+const A = '#FF9A4D';
+const s = { step: 0, editing: false, room: null, surface: null, left: null, by: 1 };
+const Q = [
+  { key: 'room', q: 'Which room?', opts: ['Guest bath', 'Master bedroom', 'Master bath', 'Kitchen', 'Living room', 'Hall', '+ New room'] },
+  { key: 'surface', q: 'What did it go on?', opts: ['Walls', 'Ceiling', 'Trim', 'Doors', 'Cabinets', 'Something else'] },
+  { key: 'left', q: 'How much is left?', opts: ['None', 'About a quarter', 'About half', 'About three quarters', 'Full can'] }
+];
+const bys = ['Me', "Bob's Painters"];
+function set(patch) { Object.assign(s, patch); render(); }
+function answer(i) {
+  const q = Q[Math.min(s.step, 2)];
+  set({ [q.key]: q.opts[i], step: s.editing ? 3 : s.step + 1, editing: false });
+}
+function back() { set({ step: Math.max(0, s.step - 1), editing: false }); }
+function edit(i) {
+  if (i === 2) set({ step: 0, editing: true });
+  else if (i === 3) set({ step: 2, editing: true });
+  else if (i === 4) set({ by: (s.by + 1) % bys.length });
+}
+
+function render() {
+  const q = Q[Math.min(s.step, 2)];
+  const review = [
+    ['Color', 'SW 7015 Repose Gray'],
+    ['Paint', 'Emerald Interior · Eggshell'],
+    ['Where', (s.room || 'Guest bath') + ' – ' + (s.surface || 'Walls').toLowerCase()],
+    ['Left', s.left || 'About half'],
+    ['By', bys[s.by]],
+    ['Date', 'Today']
+  ];
+  const backBtn = s.step === 0
+    ? `<a href="scan.html" aria-label="Back" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #ECEDEF">`
+    : `<button onclick="back()" aria-label="Back" style="width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; color: #ECEDEF">`;
+  const backEnd = s.step === 0 ? '</a>' : '</button>';
+
+  document.getElementById('phone').innerHTML = `
+  <div style="position: absolute; top: 16px; left: 8px; right: 20px; height: 44px; display: flex; align-items: center; justify-content: space-between">
+    ${backBtn}<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>${backEnd}
+    <div style="display: flex; gap: 6px" aria-hidden="true">
+      ${[0, 1, 2, 3].map(i => `<div style="width: 28px; height: 4px; border-radius: 2px; background: ${i <= s.step ? A : '#262A31'}"></div>`).join('')}
+    </div>
+  </div>
+
+  <div style="position: absolute; top: 72px; left: 20px; right: 20px; display: flex; align-items: center; gap: 10px">
+    <div style="width: 28px; height: 28px; border-radius: 8px; background: #CCC9C0"></div>
+    <div style="font-size: 15px; color: #C4C9D0">Repose Gray · Eggshell</div>
+  </div>
+
+  ${s.step < 3 ? `
+    <div class="ps-side" style="position: absolute; top: 124px; left: 16px; right: 16px">
+      <div style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em; margin: 0 4px 20px">${q.q}</div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        ${q.opts.map((label, i) => {
+          const chosen = s[q.key] === label;
+          return `<button onclick="answer(${i})" style="height: 56px; padding: 0 18px; border-radius: 16px; border: 0; background: ${chosen ? '#ECEDEF' : '#16191E'}; color: ${chosen ? '#0C0E11' : '#ECEDEF'}; text-align: left; font: 500 17px 'Space Grotesk', sans-serif">${label}</button>`;
+        }).join('')}
+      </div>
+    </div>
+  ` : `
+    <div class="ps-side" style="position: absolute; top: 124px; left: 16px; right: 16px">
+      <div style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em; margin: 0 4px 6px">Look right?</div>
+      <div style="font-size: 15px; color: #9AA1AB; margin: 0 4px 20px">Tap anything to change it.</div>
+      <div style="border-radius: 20px; background: #16191E; padding: 4px 16px">
+        ${review.map(([label, value], i) => `
+          <button onclick="edit(${i})" style="width: 100%; min-height: 56px; padding: 8px 0; border: 0; border-bottom: ${i === review.length - 1 ? '0' : '1px solid #262A31'}; background: transparent; color: #ECEDEF; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-family: 'Space Grotesk', sans-serif; text-align: right">
+            <span style="font-size: 14px; color: #9AA1AB; text-align: left">${label}</span>
+            <span style="font-size: 16px; font-weight: 500">${value}</span>
+          </button>`).join('')}
+      </div>
+    </div>
+    <a href="home.html" style="position: absolute; bottom: 36px; left: 16px; right: 16px; height: 60px; border-radius: 30px; background: ${A}; color: #0C0E11; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700">Save</a>
+  `}`;
+}
+render();
+</script>
+</body>
+</html>

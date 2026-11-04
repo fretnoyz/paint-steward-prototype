@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paint Steward – Master bedroom</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="fit.js"></script>
+</head>
+<body>
+<a class="proto-home" href="index.html">← All screens</a>
+<div class="phone">
+
+  <div style="position: absolute; top: 16px; left: 8px; height: 44px; display: flex; align-items: center">
+    <a href="home.html" aria-label="Back to your house" style="height: 44px; padding: 0 8px 0 0; display: flex; align-items: center; gap: 2px; color: #C4C9D0; text-decoration: none; font-size: 15px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+      Your house
+    </a>
+  </div>
+  <div style="position: absolute; top: 68px; left: 20px; font-size: 30px; font-weight: 700; letter-spacing: -0.02em">Master bedroom</div>
+
+  <div id="paints" style="position: absolute; top: 128px; left: 16px; right: 16px; display: flex; flex-direction: column; gap: 12px"></div>
+
+  <a href="scan.html" style="position: absolute; bottom: 32px; left: 16px; right: 16px; height: 56px; border-radius: 28px; border: 1px solid #3A4048; box-sizing: border-box; color: #ECEDEF; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600">Add paint to this room</a>
+</div>
+<script>
+const paints = [
+  { surface: 'WALLS', name: 'Evergreen Fog', hex: '#95978A', detail: 'SW 9130 · Matte · Feb 2024' },
+  { surface: 'CEILING', name: 'Ceiling Bright White', hex: '#E9E9E2', detail: 'SW 7007 · Flat · Feb 2024' },
+  { surface: 'TRIM & DOORS', name: 'Extra White', hex: '#EEEFEA', detail: 'SW 7006 · Semi-Gloss · Feb 2024' }
+];
+document.getElementById('paints').innerHTML = paints.map(p => `
+  <a href="paint.html" style="display: flex; border-radius: 20px; overflow: hidden; background: #16191E; color: #ECEDEF; text-decoration: none">
+    <div style="width: 88px; background: ${p.hex}; flex-shrink: 0"></div>
+    <div style="flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 4px">
+      <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.06em; color: #9AA1AB">${p.surface}</div>
+      <div style="font-size: 19px; font-weight: 600">${p.name}</div>
+      <div style="font-size: 14px; color: #C4C9D0">${p.detail}</div>
+    </div>
+  </a>`).join('');
+</script>
+</body>
+</html>

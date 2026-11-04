@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paint Steward – Scan a can</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="fit.js"></script>
+</head>
+<body>
+<a class="proto-home" href="index.html">← All screens</a>
+<div class="phone" id="phone"></div>
+<script>
+const A = '#FF9A4D';
+const s = { mode: 'label', reading: false, labelDone: false, stickerDone: false, help: false, copied: false };
+function set(patch) { Object.assign(s, patch); render(); }
+
+function scan() {
+  if (s.reading) return;
+  const mode = s.mode;
+  set({ reading: true });
+  setTimeout(() => {
+    if (mode === 'label') {
+      set({ reading: false, labelDone: true });
+      setTimeout(() => set({ mode: 'sticker' }), 700);
+    } else {
+      set({ reading: false, stickerDone: true });
+    }
+  }, 1300);
+}
+
+function render() {
+  const done = s.labelDone && s.stickerDone;
+  let status = 'Point at the can label', hint = 'The front of the can, where the color name is.';
+  if (s.reading) { status = 'Reading…'; hint = 'Hold still a moment.'; }
+  else if (done) { status = 'Got it: Repose Gray'; hint = 'Emerald Interior · Eggshell · formula saved'; }
+  else if (s.mode === 'sticker') { status = 'Now the tint sticker'; hint = 'Usually on the lid. It lets the store remix the exact color.'; }
+  const stepText = s.mode === 'label' && !s.labelDone ? 'Label · 1 of 2' : 'Sticker · 2 of 2';
+  const labelSeen = s.mode === 'label' && (s.reading || s.labelDone);
+  const stickerSeen = s.mode === 'sticker' && (s.reading || s.stickerDone);
+
+  document.getElementById('phone').innerHTML = `
+  <div style="position: absolute; top: 16px; left: 8px; right: 20px; height: 44px; display: flex; align-items: center; justify-content: space-between">
+    <a href="home.html" aria-label="Cancel" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #ECEDEF">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </a>
+    <div style="font-size: 14px; color: #9AA1AB">${stepText}</div>
+  </div>
+
+  <div style="position: absolute; top: 68px; left: 16px; right: 16px; height: 480px; border-radius: 28px; background: #1B1E22; overflow: hidden">
+    ${s.mode === 'label' ? `
+    <div style="position: absolute; top: 110px; left: 50%; transform: translateX(-50%) rotate(-2deg); width: 220px; padding: 20px; box-sizing: border-box; border-radius: 14px; background: #F3F0E8; color: #23211D; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 18px 40px rgba(0,0,0,0.45)">
+      <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.18em">SHERWIN-WILLIAMS</div>
+      <div>
+        <div style="font-size: 19px; font-weight: 700; line-height: 1.1">Emerald</div>
+        <div style="font-size: 12px">Interior Acrylic Latex Paint</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px">
+        <div style="width: 54px; height: 40px; border-radius: 6px; background: #CCC9C0"></div>
+        <div style="font-size: 12px; font-weight: 600; line-height: 1.25">SW 7015<br>Repose Gray</div>
+      </div>
+      <div style="font-size: 12px"><b style="letter-spacing: 0.08em">EGGSHELL</b> · Extra White Base</div>
+      ${labelSeen ? `<div class="ps-in" style="position: absolute; inset: -8px; border: 2px solid ${A}; border-radius: 18px"></div>` : ''}
+    </div>` : `
+    <div style="position: absolute; top: 130px; left: 50%; transform: translateX(-50%) rotate(1.5deg); width: 236px; padding: 16px; box-sizing: border-box; border-radius: 6px; background: #FBFBF8; color: #1D1D1B; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; line-height: 1.5; box-shadow: 0 18px 40px rgba(0,0,0,0.45)">
+      <div style="font-weight: 600">SW 7015 REPOSE GRAY</div>
+      <div style="margin-top: 8px; white-space: pre">COLORANT      OZ 32 64 128
+B1-Black       - 12  1   -
+R2-Maroon      -  1  1   -
+Y3-Deep Gold   1  8  -   -</div>
+      ${stickerSeen ? `<div class="ps-in" style="position: absolute; inset: -8px; border: 2px solid ${A}; border-radius: 12px"></div>` : ''}
+    </div>`}
+    ${s.reading ? `<div class="ps-sweep" style="position: absolute; left: 40px; right: 40px; height: 2px; background: ${A}; box-shadow: 0 0 16px 3px rgba(255,154,77,0.5)"></div>` : ''}
+  </div>
+
+  <div style="position: absolute; top: 572px; left: 24px; right: 24px; text-align: center">
+    <div style="font-size: 20px; font-weight: 600">${status}</div>
+    <div style="font-size: 14px; color: #9AA1AB; margin-top: 6px">${hint}</div>
+  </div>
+
+  ${!done ? `
+    <button aria-label="Take picture" onclick="scan()" style="position: absolute; bottom: 64px; left: 50%; transform: translateX(-50%); width: 80px; height: 80px; border-radius: 40px; border: 4px solid #ECEDEF; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center">
+      <div style="width: 62px; height: 62px; border-radius: 31px; background: ${A}"></div>
+    </button>
+    ${s.mode === 'sticker' ? `
+      <button onclick="set({ stickerDone: true })" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); height: 44px; padding: 0 16px; border: 0; background: transparent; color: #C4C9D0; font: 500 15px 'Space Grotesk', sans-serif">No sticker? Skip</button>
+    ` : `
+      <a href="ask.html" style="position: absolute; top: 714px; left: 24px; width: 84px; display: flex; flex-direction: column; align-items: center; gap: 6px; color: #ECEDEF; text-decoration: none">
+        <span style="width: 52px; height: 52px; border-radius: 26px; background: #16191E; border: 1px solid #2E333B; box-sizing: border-box; display: flex; align-items: center; justify-content: center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="4" width="10" height="4" rx="1"></rect><path d="M7 6H5a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-2"></path><path d="M9 14l2 2 4-4"></path></svg>
+        </span>
+        <span style="font-size: 12px; font-weight: 500; white-space: nowrap">Paste from AI</span>
+      </a>
+      <a href="ask.html" style="position: absolute; top: 714px; right: 24px; width: 84px; display: flex; flex-direction: column; align-items: center; gap: 6px; color: #ECEDEF; text-decoration: none">
+        <span style="width: 52px; height: 52px; border-radius: 26px; background: #16191E; border: 1px solid #2E333B; box-sizing: border-box; display: flex; align-items: center; justify-content: center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"></path></svg>
+        </span>
+        <span style="font-size: 12px; font-weight: 500; white-space: nowrap">Type it in</span>
+      </a>
+      <button onclick="set({ help: !s.help })" style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); height: 36px; padding: 0 12px; border: 0; background: transparent; color: #9AA1AB; font: 500 13px 'Space Grotesk', sans-serif; white-space: nowrap">How does Paste from AI work?</button>
+    `}
+  ` : `
+    <a class="ps-in" href="ask.html" style="position: absolute; bottom: 36px; left: 16px; right: 16px; height: 60px; border-radius: 30px; background: ${A}; color: #0C0E11; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700">Next</a>
+  `}
+
+  ${s.help ? `
+    <div class="ps-in" style="position: absolute; left: 0; right: 0; bottom: 0; padding: 24px 20px 32px; box-sizing: border-box; border-radius: 28px 28px 0 0; background: #16191E; display: flex; flex-direction: column; gap: 14px; z-index: 10">
+      <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.01em">Read it with your own AI</div>
+      <div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 1.4; color: #C4C9D0">
+        <div><b style="color: #ECEDEF">1.</b> Copy our prompt and open ChatGPT, Claude, or Gemini.</div>
+        <div><b style="color: #ECEDEF">2.</b> Send it a photo of the can label and the tint sticker.</div>
+        <div><b style="color: #ECEDEF">3.</b> Copy its answer, come back, and tap Paste from AI.</div>
+      </div>
+      <div style="font-size: 13px; color: #9AA1AB; line-height: 1.4">The photo goes to your AI, not to us. Save the prompt as a Project or custom GPT and next time it's one step.</div>
+      <div style="display: flex; gap: 10px">
+        <button onclick="set({ help: false })" style="height: 52px; padding: 0 20px; border-radius: 26px; border: 1px solid #3A4048; background: transparent; color: #ECEDEF; font: 600 15px 'Space Grotesk', sans-serif">Close</button>
+        <button onclick="set({ copied: true })" style="flex: 1; height: 52px; border-radius: 26px; border: 0; background: ${A}; color: #0C0E11; font: 700 15px 'Space Grotesk', sans-serif">${s.copied ? 'Copied. Now open your AI' : 'Copy the prompt'}</button>
+      </div>
+    </div>
+  ` : ''}`;
+}
+render();
+</script>
+</body>
+</html>
